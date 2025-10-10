@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class CharacterScripts : MonoBehaviour
 {
@@ -8,15 +9,30 @@ public class CharacterScripts : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] float shift;  
     [SerializeField] float jumpForce;  
-    [SerializeField] Animator anim;      
+    [SerializeField] Animator anim;  
+    bool isGameOver;
+    [SerializeField] GameObject menu;   
+    [SerializeField] Animator death;
+    [SerializeField] TMP_Text score;
+    float roundScore; 
+    [SerializeField] GameObject itemVFX;
+    [SerializeField] GameObject shield; 
+    Vector3 objectPosition;
+      
 
     void Start()
-    {              
+    {       
+       objectPosition = transform.position;
+       print(objectPosition);      
     }     
     void Update() 
     {                   
-       
-            // Se il giocatore preme e il personaggio non si trova già sulla corsia di sinistra del nostro tracciato, allora
+        if (!isGameOver)
+        {
+            roundScore += Time.deltaTime;
+          score.text = "score: " + roundScore.ToString("f1");
+
+           // Se il giocatore preme e il personaggio non si trova già sulla corsia di sinistra del nostro tracciato, allora
             if (Input.GetKeyDown(KeyCode.A) && transform.position.x > -9)
             {
                 // Spostamento del carattere di 9 unità a sinistra
@@ -38,26 +54,65 @@ public class CharacterScripts : MonoBehaviour
             }
 
 
-            if (rb.velocity.y > 0)
+         if (rb.velocity.y > 0)
             {
                 GetComponent<Animator>().SetBool("jump", true);
             }
 
 
-            if (rb.velocity.y == 0)
+         if (rb.velocity.y == 0)
             {
                 GetComponent<Animator>().SetBool("jump", false);
 
             }
         
-
+        }
         
 
 
     }
     void FixedUpdate()
     {
-       rb.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);       
+       if (!isGameOver)
+       {
+         rb.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);       
  
-    }   
+        }   
+    }
+
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Obstacle"))
+        {
+            isGameOver = true;
+            menu.SetActive(true);
+             death.SetBool("death",true);
+        
+            
+        }
+    }
+
+
+    private void OnTriggerEnter(Collider other) 
+   {
+       if(other.CompareTag("Money"))
+       {  
+         roundScore +=5;
+          score.text = "scoure:"+ roundScore.ToString("f1");
+          GameObject vfx = Instantiate(itemVFX, other.transform.position, other.transform.rotation);
+          Destroy (vfx, 3f);
+          
+          
+          Destroy(other.gameObject);
+       }
+    }
+
+    //void GenerateObject()
+    //{
+        //float distance = Random.Range(100,200);
+       // Instantiate (shield,player.position + new Vector3(0,2,distance),transform.rotation);
+    //}
+  
 } 
+
