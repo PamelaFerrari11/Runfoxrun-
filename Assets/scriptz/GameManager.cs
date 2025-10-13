@@ -47,10 +47,11 @@ public class GameManager : MonoBehaviour
     }
 
    
-
+   
     public void RestartGame ()
     {
-      SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+       Debug.Log("sto premendo il bottone");
+       SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     
