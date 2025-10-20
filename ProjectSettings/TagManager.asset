@@ -8,6 +8,8 @@ TagManager:
   - Obstacle
   - Money
   - Button
+  - shield
+  - Shield
   layers:
   - Default
   - TransparentFX

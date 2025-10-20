@@ -18,6 +18,13 @@ public class CharacterScripts : MonoBehaviour
     [SerializeField] GameObject itemVFX;
     [SerializeField] GameObject shield; 
     Vector3 objectPosition;
+    bool isShield;
+    [SerializeField] AudioClip itemSFX, shieldSFX, obstacleSFX, destroySFX;
+    [SerializeField] AudioSource sound, music;
+
+
+
+   
       
 
     void Start()
@@ -85,12 +92,30 @@ public class CharacterScripts : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Obstacle"))
         {
-            isGameOver = true;
-            menu.SetActive(true);
+            if(isShield)
+           {
+             isShield=true;
+             Destroy(other.gameObject);
+             sound.clip = destroySFX;
+             sound.Play();
+            }
+            else
+           {
+             isGameOver = true;
+             menu.SetActive(true);
              death.SetBool("death",true);
-        
+             sound.clip = obstacleSFX;
+             sound.Play();
+             music.Stop();
+           }
             
         }
+
+    }
+
+    void DectivateShield()
+    {
+        isShield=false;
     }
 
 
@@ -100,19 +125,20 @@ public class CharacterScripts : MonoBehaviour
        {  
          roundScore +=5;
           score.text = "scoure:"+ roundScore.ToString("f1");
-          GameObject vfx = Instantiate(itemVFX, other.transform.position, other.transform.rotation);
-          Destroy (vfx, 3f);
+          //GameObject vfx = Instantiate(itemVFX, other.transform.position, other.transform.rotation);
+          //Destroy (vfx, 3f);
           
           
           Destroy(other.gameObject);
        }
     }
 
-    //void GenerateObject()
-    //{
-        //float distance = Random.Range(100,200);
-       // Instantiate (shield,player.position + new Vector3(0,2,distance),transform.rotation);
-    //}
+   void GenerateObject()
+    {
+     float distance = Random.Range(100,200);
+      Instantiate (shield,transform.position + new Vector3(0,2,distance),transform.rotation);
+      Invoke("GenerateObject", Random.Range (20,30));
+   }
   
 } 
 
