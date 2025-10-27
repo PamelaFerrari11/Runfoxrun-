@@ -130,7 +130,14 @@ public class CharacterScripts : MonoBehaviour
           
           
           Destroy(other.gameObject);
-       }
+          
+        }
+         if(other.CompareTag("Shield"))
+           {
+             isShield = true;
+             Invoke("DeactivateShield", 5f);
+             Destroy(other.gameObject);
+            }
     }
 
    void GenerateObject()
