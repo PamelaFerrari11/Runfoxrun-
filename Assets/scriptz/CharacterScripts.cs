@@ -113,7 +113,7 @@ public class CharacterScripts : MonoBehaviour
 
     }
 
-    void DectivateShield()
+    void DeactivateShield()
     {
         isShield=false;
     }
